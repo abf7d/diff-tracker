@@ -21,12 +21,13 @@
         <th style="width: 220px">clinCoh url</th>
         <th style="width: 220px">dev url</th>
         <th style="width: 320px">Snapshot</th>
+        <th style="width: 10px"> Fixed </th>
         <th>Notes</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let row of tableRows; let i = index" 
-      [ngClass]="{'reviewed': row.reviewed, 'error': row.error, 'last-clicked': row.lastClicked}"
+      [ngClass]="{'reviewed': row.reviewed, 'error': row.error, 'last-clicked': row.lastClicked, 'working': row.reviewed && !row.error}"
          >
          <!--  -->
          <!-- <td> {{ row | json}}</td> -->
@@ -55,6 +56,11 @@
           <ng-template #noSnapshot>
             None
           </ng-template>
+        </td>
+        <td>
+          <input [hidden]="!row.error" type="checkbox" [(ngModel)]="row.fixed" 
+                 (click)="$event.stopPropagation()" 
+                 (change)="updateLocalStorage()">
         </td>
         <td>
           <textarea [ngStyle]="{height: isTextExpanded ? '200px' : 'auto' }"

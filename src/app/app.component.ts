@@ -81,7 +81,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         notes: '',
         snapshotExists: false,
         filenameBase: filenameBase,
-        lastClicked: false
+        lastClicked: false,
+        fixed: false
       };
       this.checkSnapshotFileSync(row);
       return row;
@@ -153,6 +154,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         error: row.error,
         notes: row.notes,
         image: row.snapShotName,
+        fixed: row.fixed
       };
     });
     localStorage.setItem('snapshotRowsState', JSON.stringify(state));
@@ -168,6 +170,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           row.reviewed = storedState[row.snapshotName].reviewed;
           row.error = storedState[row.snapshotName].error;
           row.notes = storedState[row.snapshotName].notes;
+          row.fixed = storedState[row.snapshotName].fixed;
         }
       });
     }
@@ -182,6 +185,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           reviewed: row.reviewed,
           error: row.error,
           notes: row.notes,
+          fixed: row.fixed
         };
       }
     });
@@ -220,6 +224,7 @@ export class AppComponent implements OnInit, AfterViewInit {
               row.reviewed = json[row.snapshotName].reviewed;
               row.error = json[row.snapshotName].error;
               row.notes = json[row.snapshotName].notes;
+              row.fixed = json[row.snapshotName].fixed
             }
           });
           this.updateLocalStorage();
