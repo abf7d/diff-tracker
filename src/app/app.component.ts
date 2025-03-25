@@ -36,6 +36,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   leftUrl: string = '';
   rightUrl: string = '';
   snapshotFile: string = '';
+  isExpanded = true;
 
   @ViewChild('leftIframe') leftIframeRef!: ElementRef<HTMLIFrameElement>;
   @ViewChild('rightIframe') rightIframeRef!: ElementRef<HTMLIFrameElement>;

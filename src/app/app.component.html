@@ -12,6 +12,7 @@
   <table id="comparisonTable">
     <thead>
       <tr>
+        <th style="width: 10px"> # </th>
         <th style="width: 20px">Reviewed</th>
         <th style="width: 20px">Error</th>
         <th style="width: 20px">Action</th>
@@ -22,11 +23,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let row of tableRows" 
+      <tr *ngFor="let row of tableRows; let i = index" 
       [ngClass]="{'reviewed': row.reviewed, 'error': row.error, 'last-clicked': row.lastClicked}"
          >
          <!--  -->
          <!-- <td> {{ row | json}}</td> -->
+          <td>{{i}}</td>
         <td>
         
           <input type="checkbox" [(ngModel)]="row.reviewed" 
@@ -72,8 +74,10 @@
   </div> -->
 
  <!-- Fixed bottom container for iframes and snapshot image -->
- <div class="bottom-container">
-  <div id="viewContainer">
+ <div class="bottom-container" >
+  <button [hidden]="isExpanded" (click)="isExpanded = true">expand</button>
+  <button [hidden]="!isExpanded" (click)="isExpanded = false">collapse</button>
+  <div id="viewContainer" [ngStyle]="{height: isExpanded ? '800px' : '300px'}">
     <div class="frame">
       <div>{{leftUrl}}</div>
     <iframe #leftIframe id="left" [src]="leftUrlSafe"></iframe>

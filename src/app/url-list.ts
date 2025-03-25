@@ -1,4 +1,3 @@
-
 export const compareUrls = [
     // row 0 spotlight
     ['/dashboard/phastr/pasc-mortality/1'],
@@ -145,4 +144,51 @@ export const compareUrls = [
     ['/dashboard/public-health/environmental/2', 'row_6'],
     ['/dashboard/public-health/environmental/3', 'row_6'],
     // Add additional URL pairs here...
+
+    ['/'],
+    ['/about'],
+    ['/about/misson.jsp'],
+    ['/contributors/'],
+    ['/covid-extension/'],
+    ['/enclave/'],
+    // ['https://ncats.nih.gov/sites/default/files/OMOP_CDM_COVID.pdf'], //external!
+    // ['https://zenodo.org/communities/cd2h-covid/records?q=&l=list&p=1&s=10&sort=newest'], // External!
+    ['/fact-sheet/'],
+    ['/domain-teams/'],
+    ['/projects/'],
+    ['/tools/'],
+    ['/external-datasets/'],
+    // ['https://ncats.nih.gov/research/research-activities/n3c/resources/data-contribution/signatories'], //External
+    ['/duas/'],
+    ['/account-instructions/'],
+    ['/PPRL/'],
+    ['/phastr/'],
+    ['/for-institutions/'],
+    ['/for-researchers/'],
+    // ['https://national-clinical-cohort-collaborative.github.io/guide-to-n3c-v1/'], //External
+    ['/onboarding/'],
+    ['/calendar/'], // airtable calendar
+    ['/training/'],
+    // ['https://zenodo.org/communities/cd2h-covid/records?q=IRB&l=list&p=1&s=10&sort=bestmatch'], // external
+    ['/communications/'],
+    ['/publication-review/'],
+    ['/communications/'],
+    ['/dur/'],
+    // ['https://ncats.nih.gov/research/research-activities/n3c/resources/data-access'], // External
+    ['/acknowledgements/'],
+    ['/download/'],
+    ['/policy/'],
+    // ['https://docs.google.com/forms/d/e/1FAIpQLSeKgUA5nmladqt16IaX1FYRNFOwRT2Nboe77qUcxOAZigQiSw/viewform'], // Google Form External
+    ['/support/'],
+    ['/faq/'],
+    // ['https://n3c-help.atlassian.net/servicedesk/customer/portal/2'], // atlassian n3c support desk
+    // [
+    //     'https://teams.microsoft.com/l/meetup-join/19%3ameeting_MjAzZWZhN2UtZWFmYy00NmE5LWE0NjEtNmM3YmI1Y2VhNTU5%40thread.v2/0?context=%7b%22Tid%22%3a%2214b77578-9773-42d5-8507-251ca2dc2b06%22%2c%22Oid%22%3a%2241433e29-66a6-4bc8-baa1-f6e001a31eb1%22%7d',
+    // ], // Teams External
+    ['/liaisons/'],
+    // ['https://docs.google.com/forms/d/e/1FAIpQLSfXhu8qReLi44kskOvPVfIjXB9qWadOYP7bKrw_H5_EHD332g/viewform'], // External Google form
+    ['/about/presentations.jsp'],
+    ['/forum/'],
+    ['/about/news.jsp'],
+    // ['https://myemail-api.cons.com/N3C-Updates.html?soid=1134197625149&aid=OvpD-Mhe3cc'], // External
 ];
