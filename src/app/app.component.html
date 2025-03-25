@@ -6,6 +6,8 @@
     <button (click)="downloadReviewedState()">Download Reviewed State</button>
     <button (click)="triggerFileInput()">Upload State</button>
     <button (click)="clearState()">Clear State</button>
+    <button [hidden]="isTextExpanded" (click)="isTextExpanded = true">Expand Text</button>
+    <button [hidden]="!isTextExpanded" (click)="isTextExpanded = false">Collapse Text</button>
     <input type="file" #fileInput style="display:none" (change)="handleFileInput($event)" />
   </div>
  
@@ -55,7 +57,8 @@
           </ng-template>
         </td>
         <td>
-          <textarea [(ngModel)]="row.notes" 
+          <textarea [ngStyle]="{height: isTextExpanded ? '200px' : 'auto' }"
+                    [(ngModel)]="row.notes" 
                     (click)="$event.stopPropagation()" 
                     (change)="updateLocalStorage()"
                     rows="2" cols="20"></textarea>
