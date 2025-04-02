@@ -43,7 +43,11 @@ tr:hover.error {
   flex: 1;
   // height: 100%;
   border: 1px solid #aaa;
+  
   // overflow: auto;
+}
+.d-flex {
+  display: flex;
 }
 iframe {
   width: 100%;
@@ -57,7 +61,7 @@ iframe {
 }
 #snapshotContainer {
   flex: 1;
-  display: flex;
+  
   align-items: center;
   justify-content: center;
   border: 1px solid #aaa;
@@ -69,7 +73,9 @@ iframe {
 textarea {
   width: 100%;
 }
-
+[hidden] {
+  display: none;
+}
 
 
 .table-container {

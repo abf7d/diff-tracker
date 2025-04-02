@@ -1,3 +1,60 @@
+export const dashboardUrls = [
+    
+
+    ['https://covid.clinicalcohort.org/dashboard/', '/n3c/dashboard'],
+    ['https://covid.clinicalcohort.org/dashboard/admin/institutions', null],
+    ['https://covid.clinicalcohort.org/dashboard/downloads', null],
+    ['https://covid.cd2h.org/dashboard/collaboration-graph', '/n3c/dashboard/collaboration-graph'],
+];  
+  export const strapiUrls = [  
+    ['http://clinicalcohort.org/', '/n3c/clinical-cohort'],
+    ['http://clinicalcohort.org/forum/', '/n3c/forum'],
+    ['http://clinicalcohort.org/about/news.jsp', '/n3c/press-coverage'],
+    ['http://clinicalcohort.org/communications', '/n3c/communications'],
+    ['http://covid.clinicalcohort.org/', '/n3c/covid'],
+    ['http://covid.clinicalcohort.org/about/', '/n3c/covid/covid-about'],
+    ['http://covid.clinicalcohort.org/about/mission.jsp', '/n3c/covid/mission' ],
+    ['http://covid.clinicalcohort.org/contributors/', '/n3c/covid/contributor'],
+    ['http://covid.clinicalcohort.org/covid-extension/', '/n3c/covid/covid-extension'],
+    ['http://covid.clinicalcohort.org/enclave/', '/n3c/covid/enclave-essentials'],
+    ['http://covid.clinicalcohort.org/fact-sheet/', '/n3c/covid/fact-sheet'],
+    ['http://covid.clinicalcohort.org/domain-teams/', '/n3c/covid/domain-teams'],
+    ['http://covid.clinicalcohort.org/projects/', '/n3c/covid/projects'],
+    ['http://covid.clinicalcohort.org/tools/', '/n3c/covid/tools'],
+    ['http://covid.clinicalcohort.org/external-datasets/', '/n3c/covid/external-datasets'],
+    ['http://covid.clinicalcohort.org/duas/', '/n3c/covid/duas'],
+    ['http://covid.clinicalcohort.org/account-instructions/', '/n3c/covid/account-creation'],
+    ['http://covid.clinicalcohort.org/PPRL/', '/n3c/covid/pprl'],
+    ['http://covid.clinicalcohort.org/phastr/', '/n3c/covid/phastr'],
+    ['http://covid.clinicalcohort.org/for-institutions/', '/n3c/covid/institution-essentials'],
+    ['http://covid.clinicalcohort.org/for-researchers/', '/n3c/covid/researcher-essentials'],
+    ['http://covid.clinicalcohort.org/onboarding/', '/n3c/covid/onboarding'],
+    ['http://covid.clinicalcohort.org/calendar/', '/n3c/covid/calendar'],
+    ['http://covid.clinicalcohort.org/training/', '/n3c/covid/training'],
+    ['http://covid.clinicalcohort.org/communications/ ', '/n3c/covid/communications'],
+    ['http://covid.clinicalcohort.org/publication-review/ ', '/n3c/covid/publication-review'],
+    ['http://covid.clinicalcohort.org/dur/ ', '/n3c/covid/dur'],
+    ['http://covid.clinicalcohort.org/acknowledgements/ ', '/n3c/covid/acknowledgements'],
+    ['http://covid.clinicalcohort.org/download/ ', '/n3c/covid/download'],
+    ['http://covid.clinicalcohort.org/policy/', '/n3c/covid/policy'],
+    ['http://covid.clinicalcohort.org/support/', '/n3c/covid/support'],
+    ['http://covid.clinicalcohort.org/faq/ ', '/n3c/covid/faq'],
+    ['http://covid.clinicalcohort.org/liaisons/ ', '/n3c/covid/liaisons'],
+    ['https://covid.clinicalcohort.org/about/presentations.jsp', '/n3c/covid/presentations'],
+    ['http://covid.clinicalcohort.org/forum/ ', '/n3c/covid/forum'],
+    ['http://covid.clinicalcohort.org/about/news.jsp', '/n3c/covid/press-coverage'],
+    ['http://education.clinicalcohort.org/', '/n3c/education'],
+    ['http://education.clinicalcohort.org/account-instructions', '/n3c/education/account-creation'],
+    ['http://education.clinicalcohort.org/support/', null],
+    ['http://education.clinicalcohort.org/faq/', '/n3c/covid/faq'], /// // This is for covid and education... are they the same page or does a new one need to be created
+    ['http://education.clinicalcohort.org/liaisons/  ', '/n3c/covid/liaisons'], // This is for covid and education... are they the same page or does a new one need to be created///n3c/covid/liaisons
+    ['http://cancer.clinicalcohort.org/', '/n3c/cancer'],
+    ['http://cancer.clinicalcohort.org/participants/', '/n3c/cancer/participants'],
+    ['http://renal.clinicalcohort.org/', '/n3c/renal'],
+    ['http://renal.clinicalcohort.org/participants/', '/n3c/renal/participants'],
+
+]
+
 export const compareUrls = [
     // row 0 spotlight
     ['/dashboard/phastr/pasc-mortality/1'],

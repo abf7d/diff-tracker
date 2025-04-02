@@ -1,4 +1,4 @@
-import { compareUrls } from './url-list';
+import { compareUrls, strapiUrls, dashboardUrls } from './url-list';
 
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -30,7 +30,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   compareUrls: string[][] = compareUrls;
 
-  tableRows: any[] = [];
+  strapiUrls: (string | null)[][] = strapiUrls;
+  dashboardUrls: (string | null)[][] = dashboardUrls; 
+
+  tableRows: CompareRow[] = [];
   leftUrlSafe!: SafeResourceUrl;
   rightUrlSafe!: SafeResourceUrl;
   leftUrl: string = '';
@@ -38,6 +41,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   snapshotFile: string = '';
   isExpanded = true;
   isTextExpanded = false;
+  hideImage = false;
 
   @ViewChild('leftIframe') leftIframeRef!: ElementRef<HTMLIFrameElement>;
   @ViewChild('rightIframe') rightIframeRef!: ElementRef<HTMLIFrameElement>;
@@ -50,11 +54,55 @@ export class AppComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.buildTableRows();
+    // this.buildTableRows();
+    this.buildSmallerTableRows();
     this.loadLocalStorage();
     this.change.detectChanges();
   }
 
+  // next run the app locally and compare 
+  buildSmallerTableRows() {
+    this.hideImage = true;
+    this.dashboardUrls.forEach(x => x.push('dashboard'))
+    this.strapiUrls.forEach(x => x.push('strapi'))
+    this.tableRows = this.dashboardUrls.concat(this.strapiUrls).map((entry, i) => {
+      const route = entry[1];
+
+      let filenameBase = entry[1] ?? 'snapshot';
+      let lastTwo = null;
+      let localUrl = null;
+
+      if (route) {
+        lastTwo = this.getLastTwoSegments(route);
+        localUrl = `http://localhost:4200${route}`;
+      }
+      // filenameBase = i + '-' + routeSegment + '-' + filenameBase;
+
+      // const routeName = lastTwo; //this.getLastNonNumberSegment(route);
+      // const snapshotName = `${i}-${routeSegment}-snapshot`;
+      // const snapshotFile = `${filenameBase}.diff.png`;
+      const fullUrl1 = entry[0];//this.baseUrls[0] + route;
+      const fullUrl2 = localUrl;
+      const row: CompareRow = {
+        route: route ?? 'missing',
+        routeName: lastTwo,
+        // routeName: lastTwo ?? 'missing ' + fullUrl1,
+        snapshotName: 'snapshotName',
+        snapshotFile: entry[2] ?? 'snapshotFile',
+        fullUrl1: fullUrl1 ?? 'missing',
+        fullUrl2: fullUrl2 ?? 'missing',
+        reviewed: false,
+        error: false,
+        notes: '',
+        snapshotExists: false,
+        filenameBase: filenameBase,
+        lastClicked: false,
+        fixed: false
+      };
+      this.checkSnapshotFileSync(row);
+      return row;
+    });
+  }
   // Build table rows from compareUrls; add default properties for reviewed and error.
   buildTableRows() {
     this.tableRows = this.compareUrls.map((entry, i) => {
@@ -69,7 +117,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       const snapshotFile = `${filenameBase}.diff.png`;
       const fullUrl1 = this.baseUrls[0] + route;
       const fullUrl2 = this.baseUrls[1] + route;
-      const row = {
+      const row: CompareRow = {
         route,
         routeName,
         snapshotName: snapshotName,
@@ -82,9 +130,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         snapshotExists: false,
         filenameBase: filenameBase,
         lastClicked: false,
-        fixed: false
+        fixed: false,
       };
-      this.checkSnapshotFileSync(row);
+      // this.checkSnapshotFileSync(row);
       return row;
     });
   }
@@ -98,6 +146,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     }
     return '';
+  }
+
+  // Helper: Returns the last two segments of a route.
+  getLastTwoSegments(route: string): string {
+    const segments = route.split('/').filter(segment => segment !== '');
+    return segments.slice(-2).join('/');
   }
 
   // Called when a row is clicked to update the iframes and snapshot image.
@@ -117,7 +171,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   // Check if the snapshot file exists in assets/__diff_output__.
-  checkSnapshotFile(row: any) {
+  checkSnapshotFile(row: CompareRow) {
     const url = `assets/__diff_output__/${row.filenameBase}`;
     // Use HEAD request to check if the file exists.
     this.http.head(url, { observe: 'response' }).subscribe(
@@ -132,7 +186,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     );
   }
 
-  checkSnapshotFileSync(row: any) {
+  checkSnapshotFileSync(row: CompareRow) {
     const url = `assets/__diff_output__/${row.snapshotFile}`;
     try {
       const xhr = new XMLHttpRequest();
@@ -153,7 +207,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         reviewed: row.reviewed,
         error: row.error,
         notes: row.notes,
-        image: row.snapShotName,
+        image: row.snapshotName,
         fixed: row.fixed
       };
     });
@@ -237,4 +291,20 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {}
+}
+
+export interface CompareRow {
+  route: string;
+  routeName: string | null;
+  snapshotName: string;
+  snapshotFile: string;
+  fullUrl1: string;
+  fullUrl2: string;
+  reviewed: boolean;
+  error: boolean;
+  notes: string;
+  snapshotExists: boolean;
+  filenameBase: string;
+  lastClicked: boolean;
+  fixed: boolean;
 }
