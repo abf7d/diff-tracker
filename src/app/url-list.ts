@@ -44,6 +44,8 @@ export const dashboardUrls = [
     ['http://covid.clinicalcohort.org/forum/ ', '/n3c/covid/forum'],
     ['http://covid.clinicalcohort.org/about/news.jsp', '/n3c/covid/press-coverage'],
     ['http://education.clinicalcohort.org/', '/n3c/education'],
+    ['http://education.clinicalcohort.org/duas/ ', '/n3c/covid/duas'],
+    ['http://education.clinicalcohort.org/dur/ ', '/n3c/education/dur'],
     ['http://education.clinicalcohort.org/account-instructions', '/n3c/education/account-creation'],
     ['http://education.clinicalcohort.org/support/', null],
     ['http://education.clinicalcohort.org/faq/', '/n3c/covid/faq'], /// // This is for covid and education... are they the same page or does a new one need to be created

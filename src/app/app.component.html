@@ -123,6 +123,8 @@
     <button [hidden]="!isExpanded" (click)="isExpanded = false">
       collapse
     </button>
+    <button [hidden]="hideLocal" (click)="hideLocal = true">hide local url</button>
+    <button [hidden]="!hideLocal" (click)="hideLocal = false">show local url</button>
     <button [hidden]="hideImage" (click)="hideImage = true">hide image</button>
     <button [hidden]="!hideImage" (click)="hideImage = false">show image</button>
     <div
@@ -133,7 +135,7 @@
         <div>{{ leftUrl }}</div>
         <iframe  *ngIf="leftUrl" id="left" [src]="leftUrlSafe"></iframe>
       </div>
-      <div class="frame">
+      <div class="frame" [hidden]="hideLocal">
         <div>{{ rightUrl }}</div>
         <iframe  [src]="rightUrlSafe"></iframe>
       </div>

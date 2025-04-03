@@ -42,6 +42,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   isExpanded = true;
   isTextExpanded = false;
   hideImage = false;
+  hideLocal = false;
 
   @ViewChild('leftIframe') leftIframeRef!: ElementRef<HTMLIFrameElement>;
   @ViewChild('rightIframe') rightIframeRef!: ElementRef<HTMLIFrameElement>;
