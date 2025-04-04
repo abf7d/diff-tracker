@@ -1,12 +1,12 @@
 export const dashboardUrls = [
-    
+
 
     ['https://covid.clinicalcohort.org/dashboard/', '/n3c/dashboard'],
     ['https://covid.clinicalcohort.org/dashboard/admin/institutions', null],
     ['https://covid.clinicalcohort.org/dashboard/downloads', null],
     ['https://covid.cd2h.org/dashboard/collaboration-graph', '/n3c/dashboard/collaboration-graph'],
-];  
-  export const strapiUrls = [  
+];
+  export const strapiUrls = [
     ['http://clinicalcohort.org/', '/n3c/clinical-cohort'],
     ['http://clinicalcohort.org/forum/', '/n3c/forum'],
     ['http://clinicalcohort.org/about/news.jsp', '/n3c/press-coverage'],
@@ -250,4 +250,10 @@ export const compareUrls = [
     ['/forum/'],
     ['/about/news.jsp'],
     // ['https://myemail-api.cons.com/N3C-Updates.html?soid=1134197625149&aid=OvpD-Mhe3cc'], // External
+];
+
+export const domainTeamsUrls = [
+    ['https://covid.cd2h.org/multiorgan', '/n3c/covid/domain-teams/domain/multiorgan'],
+    ['https://covid.cd2h.org/ET-DT', '/n3c/covid/domain-teams/cross_cutting/ET-DT'],
+    ['https://covid.cd2h.org/team-creation/', '/n3c/covid/domain-teams/team-creation']
 ];
