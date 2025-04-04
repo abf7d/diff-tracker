@@ -1,4 +1,9 @@
-import { compareUrls, strapiUrls, dashboardUrls } from './url-list';
+import {
+  compareUrls,
+  strapiUrls,
+  dashboardUrls,
+  domainTeamsUrls,
+} from './url-list';
 
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -22,7 +27,6 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit, AfterViewInit {
-
   baseUrls: string[] = [
     'https://covid.clinicalcohort.org',
     'https://n3c-opendata-dev.ncats.nih.gov/covid',
@@ -31,7 +35,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   compareUrls: string[][] = compareUrls;
 
   strapiUrls: (string | null)[][] = strapiUrls;
-  dashboardUrls: (string | null)[][] = dashboardUrls; 
+  dashboardUrls: (string | null)[][] = dashboardUrls;
+  domainTeamsUrls: (string | null)[][] = domainTeamsUrls;
 
   tableRows: CompareRow[] = [];
   leftUrlSafe!: SafeResourceUrl;
@@ -50,8 +55,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private change: ChangeDetectorRef ,
-    private http: HttpClient
+    private change: ChangeDetectorRef,
+    private http: HttpClient,
   ) {}
 
   ngOnInit() {
@@ -61,48 +66,52 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.change.detectChanges();
   }
 
-  // next run the app locally and compare 
+  // next run the app locally and compare
   buildSmallerTableRows() {
     this.hideImage = true;
-    this.dashboardUrls.forEach(x => x.push('dashboard'))
-    this.strapiUrls.forEach(x => x.push('strapi'))
-    this.tableRows = this.dashboardUrls.concat(this.strapiUrls).map((entry, i) => {
-      const route = entry[1];
+    this.dashboardUrls.forEach((x) => x.push('dashboard'));
+    this.strapiUrls.forEach((x) => x.push('strapi'));
+    this.domainTeamsUrls.forEach((x) => x.push('domainTeams'));
+    this.tableRows = this.dashboardUrls
+      .concat(this.strapiUrls)
+      .concat(this.domainTeamsUrls)
+      .map((entry, i) => {
+        const route = entry[1];
 
-      let filenameBase = entry[1] ?? 'snapshot';
-      let lastTwo = null;
-      let localUrl = null;
+        let filenameBase = entry[1] ?? 'snapshot';
+        let lastTwo = null;
+        let localUrl = null;
 
-      if (route) {
-        lastTwo = this.getLastTwoSegments(route);
-        localUrl = `http://localhost:4200${route}`;
-      }
-      // filenameBase = i + '-' + routeSegment + '-' + filenameBase;
+        if (route) {
+          lastTwo = this.getLastTwoSegments(route);
+          localUrl = `http://localhost:4200${route}`;
+        }
+        // filenameBase = i + '-' + routeSegment + '-' + filenameBase;
 
-      // const routeName = lastTwo; //this.getLastNonNumberSegment(route);
-      // const snapshotName = `${i}-${routeSegment}-snapshot`;
-      // const snapshotFile = `${filenameBase}.diff.png`;
-      const fullUrl1 = entry[0];//this.baseUrls[0] + route;
-      const fullUrl2 = localUrl;
-      const row: CompareRow = {
-        route: route ?? 'missing',
-        routeName: lastTwo,
-        // routeName: lastTwo ?? 'missing ' + fullUrl1,
-        snapshotName: 'snapshotName',
-        snapshotFile: entry[2] ?? 'snapshotFile',
-        fullUrl1: fullUrl1 ?? 'missing',
-        fullUrl2: fullUrl2 ?? 'missing',
-        reviewed: false,
-        error: false,
-        notes: '',
-        snapshotExists: false,
-        filenameBase: filenameBase,
-        lastClicked: false,
-        fixed: false
-      };
-      this.checkSnapshotFileSync(row);
-      return row;
-    });
+        // const routeName = lastTwo; //this.getLastNonNumberSegment(route);
+        // const snapshotName = `${i}-${routeSegment}-snapshot`;
+        // const snapshotFile = `${filenameBase}.diff.png`;
+        const fullUrl1 = entry[0]; //this.baseUrls[0] + route;
+        const fullUrl2 = localUrl;
+        const row: CompareRow = {
+          route: route ?? 'missing',
+          routeName: lastTwo,
+          // routeName: lastTwo ?? 'missing ' + fullUrl1,
+          snapshotName: 'snapshotName',
+          snapshotFile: entry[2] ?? 'snapshotFile',
+          fullUrl1: fullUrl1 ?? 'missing',
+          fullUrl2: fullUrl2 ?? 'missing',
+          reviewed: false,
+          error: false,
+          notes: '',
+          snapshotExists: false,
+          filenameBase: filenameBase,
+          lastClicked: false,
+          fixed: false,
+        };
+        this.checkSnapshotFileSync(row);
+        return row;
+      });
   }
   // Build table rows from compareUrls; add default properties for reviewed and error.
   buildTableRows() {
@@ -151,7 +160,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // Helper: Returns the last two segments of a route.
   getLastTwoSegments(route: string): string {
-    const segments = route.split('/').filter(segment => segment !== '');
+    const segments = route.split('/').filter((segment) => segment !== '');
     return segments.slice(-2).join('/');
   }
 
@@ -161,13 +170,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.rightUrl = row.fullUrl2;
     // Create safe URLs using DomSanitizer
     this.leftUrlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(
-      this.leftUrl
+      this.leftUrl,
     );
     this.rightUrlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(
-      this.rightUrl
+      this.rightUrl,
     );
     this.snapshotFile = row.snapshotFile;
-    this.tableRows.forEach(x => x.lastClicked = false);
+    this.tableRows.forEach((x) => (x.lastClicked = false));
     row.lastClicked = true;
   }
 
@@ -183,7 +192,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       (error) => {
         // If error occurs (e.g. 404), mark as false.
         row.snapshotExists = false;
-      }
+      },
     );
   }
 
@@ -209,7 +218,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         error: row.error,
         notes: row.notes,
         image: row.snapshotName,
-        fixed: row.fixed
+        fixed: row.fixed,
       };
     });
     localStorage.setItem('snapshotRowsState', JSON.stringify(state));
@@ -240,7 +249,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           reviewed: row.reviewed,
           error: row.error,
           notes: row.notes,
-          fixed: row.fixed
+          fixed: row.fixed,
         };
       }
     });
@@ -279,7 +288,7 @@ export class AppComponent implements OnInit, AfterViewInit {
               row.reviewed = json[row.snapshotName].reviewed;
               row.error = json[row.snapshotName].error;
               row.notes = json[row.snapshotName].notes;
-              row.fixed = json[row.snapshotName].fixed
+              row.fixed = json[row.snapshotName].fixed;
             }
           });
           this.updateLocalStorage();
