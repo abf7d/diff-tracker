@@ -61,18 +61,19 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     // this.buildTableRows();
-    this.buildSmallerTableRows();
+    this.tableRows = this.buildSmallerTableRows();
     this.loadLocalStorage();
     this.change.detectChanges();
   }
 
   // next run the app locally and compare
-  buildSmallerTableRows() {
+  buildSmallerTableRows(): CompareRow[] {
     this.hideImage = true;
     this.dashboardUrls.forEach((x) => x.push('dashboard'));
     this.strapiUrls.forEach((x) => x.push('strapi'));
     this.domainTeamsUrls.forEach((x) => x.push('domainTeams'));
-    this.tableRows = this.dashboardUrls
+
+    return this.dashboardUrls
       .concat(this.strapiUrls)
       .concat(this.domainTeamsUrls)
       .map((entry, i) => {
@@ -97,7 +98,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           route: route ?? 'missing',
           routeName: lastTwo,
           // routeName: lastTwo ?? 'missing ' + fullUrl1,
-          snapshotName: 'snapshotName',
+          snapshotName: `${i}-snapshot`,
           snapshotFile: entry[2] ?? 'snapshotFile',
           fullUrl1: fullUrl1 ?? 'missing',
           fullUrl2: fullUrl2 ?? 'missing',
@@ -113,6 +114,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         return row;
       });
   }
+
   // Build table rows from compareUrls; add default properties for reviewed and error.
   buildTableRows() {
     this.tableRows = this.compareUrls.map((entry, i) => {
@@ -264,7 +266,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   clearState() {
-    this.buildTableRows();
+    this.tableRows = this.buildSmallerTableRows();
     this.updateLocalStorage();
   }
 
@@ -276,21 +278,32 @@ export class AppComponent implements OnInit, AfterViewInit {
   // Handle file input change and update state.
   handleFileInput(event: any) {
     const file = event.target.files[0];
-    this.clearState();
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         try {
           const json = JSON.parse(e.target.result);
-          // Update tableRows with the uploaded state.
+
+          // Rebuild fresh rows first
+          this.tableRows = this.buildSmallerTableRows();
+
+          // Restore saved data
           this.tableRows.forEach((row) => {
-            if (json[row.snapshotName]) {
-              row.reviewed = json[row.snapshotName].reviewed;
-              row.error = json[row.snapshotName].error;
-              row.notes = json[row.snapshotName].notes;
-              row.fixed = json[row.snapshotName].fixed;
+            const saved = json[row.snapshotName];
+            if (saved) {
+              row.reviewed = saved.reviewed;
+              row.error = saved.error;
+              row.notes = saved.notes;
+              row.fixed = saved.fixed;
             }
           });
+
+          // Sort by index extracted from snapshotName like "12-snapshot"
+          this.tableRows.sort((a, b) => {
+            const getIndex = (s: string) => parseInt(s.split('-')[0], 10);
+            return getIndex(a.snapshotName) - getIndex(b.snapshotName);
+          });
+
           this.updateLocalStorage();
         } catch (error) {
           console.error('Invalid JSON file', error);
