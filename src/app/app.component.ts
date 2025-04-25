@@ -13,6 +13,8 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { environment } from '../environments/environment';
+
 
 @Component({
   selector: 'app-root',
@@ -75,7 +77,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
       if (route) {
         lastTwo = this.getLastTwoSegments(route);
-        localUrl = `http://localhost:4200${route}`;
+        // localUrl = `http://localhost:4200${route}`;
+        localUrl = `${environment.odpN3cBaserUrl}${route}`;
       }
       // filenameBase = i + '-' + routeSegment + '-' + filenameBase;
 
