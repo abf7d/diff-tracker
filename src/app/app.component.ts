@@ -1,4 +1,9 @@
-import { compareUrls, strapiUrls, dashboardUrls } from './url-list';
+import {
+  compareUrls,
+  strapiUrls,
+  dashboardUrls,
+  domainTeamsUrls,
+} from './url-list';
 
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +20,6 @@ import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '../environments/environment';
 
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -24,7 +28,6 @@ import { environment } from '../environments/environment';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit, AfterViewInit {
-
   baseUrls: string[] = [
     'https://covid.clinicalcohort.org',
     'https://n3c-opendata-dev.ncats.nih.gov/covid',
@@ -33,7 +36,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   compareUrls: string[][] = compareUrls;
 
   strapiUrls: (string | null)[][] = strapiUrls;
-  dashboardUrls: (string | null)[][] = dashboardUrls; 
+  dashboardUrls: (string | null)[][] = dashboardUrls;
+  domainTeamsUrls: (string | null)[][] = domainTeamsUrls;
 
   tableRows: CompareRow[] = [];
   leftUrlSafe!: SafeResourceUrl;
@@ -45,6 +49,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   isTextExpanded = false;
   hideImage = false;
   hideLocal = false;
+  targetEnv!: 'local' | 'env-val';
+  localUrlAlt = environment.localUrlAlt;
+  baseurl = environment.odpN3cBaseUrl;
 
   @ViewChild('leftIframe') leftIframeRef!: ElementRef<HTMLIFrameElement>;
   @ViewChild('rightIframe') rightIframeRef!: ElementRef<HTMLIFrameElement>;
@@ -52,61 +59,69 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private change: ChangeDetectorRef ,
+    private change: ChangeDetectorRef,
     private http: HttpClient
   ) {}
 
   ngOnInit() {
-    // this.buildTableRows();
-    this.buildSmallerTableRows();
+    const savedEnv = localStorage.getItem('targetEnv') as 'local' | 'env-val';
+    this.targetEnv = savedEnv ?? 'env-val';
+    this.tableRows = this.buildSmallerTableRows();
     this.loadLocalStorage();
     this.change.detectChanges();
   }
 
-  // next run the app locally and compare 
-  buildSmallerTableRows() {
-    this.hideImage = true;
-    this.dashboardUrls.forEach(x => x.push('dashboard'))
-    this.strapiUrls.forEach(x => x.push('strapi'))
-    this.tableRows = this.dashboardUrls.concat(this.strapiUrls).map((entry, i) => {
-      const route = entry[1];
+  onTargetEnvChange(newValue: 'local' | 'env-val') {
+    this.targetEnv = newValue;
+    localStorage.setItem('targetEnv', newValue);
+    this.tableRows = this.buildSmallerTableRows();
 
-      let filenameBase = entry[1] ?? 'snapshot';
-      let lastTwo = null;
-      let localUrl = null;
-
-      if (route) {
-        lastTwo = this.getLastTwoSegments(route);
-        // localUrl = `http://localhost:4200${route}`;
-        localUrl = `${environment.odpN3cBaserUrl}${route}`;
-      }
-      // filenameBase = i + '-' + routeSegment + '-' + filenameBase;
-
-      // const routeName = lastTwo; //this.getLastNonNumberSegment(route);
-      // const snapshotName = `${i}-${routeSegment}-snapshot`;
-      // const snapshotFile = `${filenameBase}.diff.png`;
-      const fullUrl1 = entry[0];//this.baseUrls[0] + route;
-      const fullUrl2 = localUrl;
-      const row: CompareRow = {
-        route: route ?? 'missing',
-        routeName: lastTwo,
-        // routeName: lastTwo ?? 'missing ' + fullUrl1,
-        snapshotName: 'snapshotName',
-        snapshotFile: entry[2] ?? 'snapshotFile',
-        fullUrl1: fullUrl1 ?? 'missing',
-        fullUrl2: fullUrl2 ?? 'missing',
-        reviewed: false,
-        error: false,
-        notes: '',
-        snapshotExists: false,
-        filenameBase: filenameBase,
-        lastClicked: false,
-        fixed: false
-      };
-      this.checkSnapshotFileSync(row);
-      return row;
-    });
   }
+
+  // next run the app locally and compare
+  buildSmallerTableRows(): CompareRow[] {
+    this.hideImage = true;
+    this.dashboardUrls.forEach((x) => x.push('dashboard'));
+    this.strapiUrls.forEach((x) => x.push('strapi'));
+    this.domainTeamsUrls.forEach((x) => x.push('domainTeams'));
+
+    return this.dashboardUrls
+      .concat(this.strapiUrls)
+      .concat(this.domainTeamsUrls)
+      .map((entry, i) => {
+        const route = entry[1];
+
+        let filenameBase = entry[1] ?? 'snapshot';
+        let lastTwo = null;
+        let localUrl = null;
+
+        if (route) {
+          lastTwo = this.getLastTwoSegments(route);
+          const baseUrl = (this.targetEnv === 'env-val' || !environment.localUrlAlt) ? environment.odpN3cBaseUrl : environment.localUrlAlt;
+          localUrl = `${baseUrl}${route}`;
+        }
+        const fullUrl1 = entry[0];
+        const fullUrl2 = localUrl;
+        const row: CompareRow = {
+          route: route ?? 'missing',
+          routeName: lastTwo,
+          snapshotName: `${i}-snapshot`,
+          snapshotFile: entry[2] ?? 'snapshotFile',
+          fullUrl1: fullUrl1 ?? 'missing',
+          fullUrl2: fullUrl2 ?? 'missing',
+          reviewed: false,
+          error: false,
+          notes: '',
+          snapshotExists: false,
+          filenameBase: filenameBase,
+          lastClicked: false,
+          fixed: false,
+        };
+        this.checkSnapshotFileSync(row);
+        return row;
+      });
+  }
+
   // Build table rows from compareUrls; add default properties for reviewed and error.
   buildTableRows() {
     this.tableRows = this.compareUrls.map((entry, i) => {
@@ -136,7 +151,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         lastClicked: false,
         fixed: false,
       };
-      // this.checkSnapshotFileSync(row);
       return row;
     });
   }
@@ -154,7 +168,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // Helper: Returns the last two segments of a route.
   getLastTwoSegments(route: string): string {
-    const segments = route.split('/').filter(segment => segment !== '');
+    const segments = route.split('/').filter((segment) => segment !== '');
     return segments.slice(-2).join('/');
   }
 
@@ -170,7 +184,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.rightUrl
     );
     this.snapshotFile = row.snapshotFile;
-    this.tableRows.forEach(x => x.lastClicked = false);
+    this.tableRows.forEach((x) => (x.lastClicked = false));
     row.lastClicked = true;
   }
 
@@ -212,7 +226,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         error: row.error,
         notes: row.notes,
         image: row.snapshotName,
-        fixed: row.fixed
+        fixed: row.fixed,
       };
     });
     localStorage.setItem('snapshotRowsState', JSON.stringify(state));
@@ -243,7 +257,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           reviewed: row.reviewed,
           error: row.error,
           notes: row.notes,
-          fixed: row.fixed
+          fixed: row.fixed,
         };
       }
     });
@@ -258,7 +272,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   clearState() {
-    this.buildTableRows();
+    this.tableRows = this.buildSmallerTableRows();
     this.updateLocalStorage();
   }
 
@@ -270,21 +284,32 @@ export class AppComponent implements OnInit, AfterViewInit {
   // Handle file input change and update state.
   handleFileInput(event: any) {
     const file = event.target.files[0];
-    this.clearState();
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         try {
           const json = JSON.parse(e.target.result);
-          // Update tableRows with the uploaded state.
+
+          // Rebuild fresh rows first
+          this.tableRows = this.buildSmallerTableRows();
+
+          // Restore saved data
           this.tableRows.forEach((row) => {
-            if (json[row.snapshotName]) {
-              row.reviewed = json[row.snapshotName].reviewed;
-              row.error = json[row.snapshotName].error;
-              row.notes = json[row.snapshotName].notes;
-              row.fixed = json[row.snapshotName].fixed
+            const saved = json[row.snapshotName];
+            if (saved) {
+              row.reviewed = saved.reviewed;
+              row.error = saved.error;
+              row.notes = saved.notes;
+              row.fixed = saved.fixed;
             }
           });
+
+          // Sort by index extracted from snapshotName like "12-snapshot"
+          this.tableRows.sort((a, b) => {
+            const getIndex = (s: string) => parseInt(s.split('-')[0], 10);
+            return getIndex(a.snapshotName) - getIndex(b.snapshotName);
+          });
+
           this.updateLocalStorage();
         } catch (error) {
           console.error('Invalid JSON file', error);

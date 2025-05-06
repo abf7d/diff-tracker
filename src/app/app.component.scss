@@ -145,3 +145,15 @@ table td {
 .last-clicked:hover {
   font-weight: bold;
 }
+.inline-radios {
+  display: flex;
+  gap: 8px;
+  padding-left: 20px;
+  & > div {
+    align-items: baseline;
+    display:flex
+  }
+}
+.download-upload-buttons {
+  display: flex;
+}

@@ -1,4 +1,4 @@
 export const environment = {
-    odpN3cBaserUrl: 'https://opendata-demo.ncats.nih.gov'
-    // odpN3cBaserUrl: 'http://localhost:4200'
+    odpN3cBaseUrl: 'https://n3c-dev.ncats.nih.gov',
+    localUrlAlt:  'http://localhost:4200'
 };

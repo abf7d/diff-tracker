@@ -18,8 +18,18 @@
       style="display: none"
       (change)="handleFileInput($event)"
     />
+    <div class="inline-radios" *ngIf="localUrlAlt">
+      <div>
+        <div>Dev</div>
+        <input type="radio" name="target-env" [(ngModel)]="targetEnv" value="env-val" (ngModelChange)="onTargetEnvChange($event)">
+      </div>
+      <div>
+        <div>Local</div>
+        <input type="radio"  name="target-env" [(ngModel)]="targetEnv" value="local" (ngModelChange)="onTargetEnvChange($event)">
+      </div>
+    </div>
   </div>
-<!-- {{tableRows | json}} -->
+
   <table id="comparisonTable">
     <thead>
       <tr>
